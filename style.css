@@ -1,0 +1,265 @@
+/* ======== GLOBAL STYLES & VARIABLES ======== */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+
+:root {
+    --primary-green: #347a38;
+    --dark-green: #2a632d;
+    --light-green: #eaf3ea;
+    --accent-color: #4CAF50;
+    --text-dark: #212529;
+    --text-light: #555;
+    --bg-light: #f8f9fa;
+    --white: #ffffff;
+    --border-color: #dee2e6;
+    --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    color: var(--text-dark);
+    background-color: var(--white);
+    line-height: 1.7;
+}
+
+.container {
+    max-width: 1140px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+h1, h2, h3, h4 {
+    font-weight: 600;
+    color: var(--primary-green);
+}
+
+h1 { font-size: 2.8rem; line-height: 1.2; }
+h2 { font-size: 2.2rem; margin-bottom: 1rem; text-align: center; }
+h3 { font-size: 1.4rem; }
+p { color: var(--text-light); }
+
+.section-subtitle {
+    text-align: center;
+    max-width: 700px;
+    margin: 0 auto 40px auto;
+}
+
+/* ======== BUTTONS ======== */
+.btn {
+    padding: 12px 28px;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: 600;
+    display: inline-block;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+}
+
+.btn-primary {
+    background-color: var(--primary-green);
+    color: var(--white);
+}
+.btn-primary:hover {
+    background-color: var(--dark-green);
+    transform: translateY(-2px);
+}
+
+.btn-secondary {
+    background-color: var(--white);
+    color: var(--primary-green);
+    border-color: var(--border-color);
+}
+.btn-secondary:hover {
+    background-color: var(--light-green);
+    border-color: var(--primary-green);
+    transform: translateY(-2px);
+}
+
+.btn-outline {
+    color: var(--primary-green);
+}
+.btn-outline:hover {
+    color: var(--dark-green);
+}
+
+
+/* ======== HEADER ======== */
+.main-header {
+    background: var(--white);
+    padding: 15px 0;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+.main-header .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.logo {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--primary-green);
+    text-decoration: none;
+}
+.main-nav a {
+    text-decoration: none;
+    color: var(--text-dark);
+    margin-left: 20px;
+    font-weight: 500;
+}
+.main-nav a.btn {
+    margin-left: 25px;
+}
+
+/* ======== HERO SECTION ======== */
+.hero-section {
+    background-color: var(--light-green);
+    padding: 80px 0;
+}
+.hero-content {
+    display: flex;
+    align-items: center;
+    gap: 40px;
+}
+.hero-text { flex: 1; }
+.hero-text p { margin: 20px 0 30px 0; }
+.hero-buttons .btn { margin-right: 15px; }
+.hero-image { flex: 1; text-align: center; }
+.hero-image img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 20px;
+}
+
+/* ======== ABOUT SECTION ======== */
+.about-section {
+    padding: 80px 0;
+    background-color: var(--white);
+}
+
+/* ======== FEATURES SECTION ======== */
+.features-section {
+    padding: 80px 0;
+    background-color: var(--bg-light);
+}
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 25px;
+    margin-top: 40px;
+}
+.feature-card {
+    background-color: var(--white);
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: var(--shadow);
+    text-align: left;
+    text-decoration: none;
+    color: var(--text-dark);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 1px solid var(--border-color);
+}
+.feature-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+}
+.feature-card i {
+    font-size: 2.5rem;
+    color: var(--accent-color);
+    margin-bottom: 15px;
+}
+.feature-card h3 { margin-bottom: 10px; }
+
+/* ======== BUILT FOR KERALA SECTION ======== */
+.built-for-kerala {
+    padding: 80px 0;
+}
+.perks-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+    text-align: center;
+    margin-top: 40px;
+}
+.perk i {
+    font-size: 3rem;
+    color: var(--primary-green);
+    margin-bottom: 15px;
+}
+
+/* ======== FINAL CTA & FOOTER ======== */
+.final-cta {
+    padding: 60px 0;
+    background: var(--light-green);
+    text-align: center;
+}
+.final-cta p {
+    max-width: 600px;
+    margin: 15px auto 30px auto;
+}
+.final-cta .cta-buttons .btn { margin: 0 10px; }
+
+.main-footer {
+    background-color: var(--dark-green);
+    color: #e0e0e0;
+    padding: 40px 0 20px 0;
+}
+.main-footer .container { text-align: center; }
+.main-footer ul { list-style: none; padding: 0; margin-bottom: 20px; }
+.main-footer li { display: inline; margin: 0 15px; }
+.main-footer a { color: var(--white); text-decoration: none; }
+.main-footer .copyright { margin-top: 20px; font-size: 0.9rem; color: #aaa; }
+
+
+/* ======== PAGE-SPECIFIC & RESPONSIVE ======== */
+/* Login/Signup Forms */
+.centered-card {
+    max-width: 450px;
+    margin: 8vh auto;
+    padding: 40px;
+    border-radius: 15px;
+    background: var(--white);
+    box-shadow: var(--shadow);
+    text-align: center;
+}
+.brand { font-size: 1.8rem; font-weight: 700; color: var(--primary-green); margin-bottom: 1rem; }
+.form { display: flex; flex-direction: column; gap: 15px; margin-top: 20px; }
+.form label { display: none; } /* modern look */
+.form input, .form select, .form button {
+    width: 100%;
+    padding: 14px;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    font-size: 1rem;
+}
+.form input::placeholder { color: #999; }
+.form button {
+    background: var(--primary-green);
+    color: var(--white);
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+    margin-top: 10px;
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+    .hero-content { flex-direction: column; text-align: center; }
+    .hero-image { margin-top: 40px; }
+    .perks-grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 768px) {
+    h1 { font-size: 2.2rem; }
+    h2 { font-size: 1.8rem; }
+    .main-nav { display: none; } /* Simplification for hackathon, can be replaced by a burger menu */
+    .hero-buttons, .cta-buttons { display: flex; flex-direction: column; gap: 15px; align-items: center;}
+}
+

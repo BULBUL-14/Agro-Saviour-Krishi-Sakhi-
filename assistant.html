@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Assistant - Krishi Sakhi</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f2fff2;
+      margin: 0;
+      padding: 0;
+    }
+    .assistant-container {
+      max-width: 800px;
+      margin: 50px auto;
+      background: #ffffff;
+      border-radius: 20px;
+      padding: 20px;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+    }
+    h1 {
+      text-align: center;
+      font-size: 28px;
+      margin-bottom: 20px;
+      color: #2e7d32;
+    }
+    #chat-box {
+      border: 1px solid #ccc;
+      border-radius: 15px;
+      height: 400px;
+      overflow-y: auto;
+      padding: 15px;
+      margin-bottom: 15px;
+      background: #f9f9f9;
+    }
+    .msg {
+      margin: 10px 0;
+      padding: 10px 15px;
+      border-radius: 12px;
+      max-width: 70%;
+    }
+    .user {
+      background: #d1f7c4;
+      align-self: flex-end;
+      text-align: right;
+      margin-left: auto;
+    }
+    .bot {
+      background: #e4e4e4;
+      text-align: left;
+    }
+    .input-row {
+      display: flex;
+      gap: 10px;
+    }
+    #user-input {
+      flex: 1;
+      padding: 12px;
+      font-size: 16px;
+      border-radius: 10px;
+      border: 1px solid #aaa;
+    }
+    button {
+      padding: 12px 18px;
+      font-size: 16px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+    #send-btn {
+      background: #2e7d32;
+      color: white;
+    }
+    #mic-btn {
+      background: #ff7043;
+      color: white;
+    }
+    #mic-btn.listening {
+      background: #d32f2f;
+      animation: pulse 1s infinite;
+    }
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+      100% { transform: scale(1); }
+    }
+    .lang-select {
+      margin-bottom: 15px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="assistant-container">
+    <h1>🤖 Krishi Sakhi Assistant</h1>
+
+    <div class="lang-select">
+      <label for="lang">🌐 Choose Language: </label>
+      <select id="lang">
+        <option value="en-IN">English</option>
+        <option value="hi-IN">हिंदी (Hindi)</option>
+        <option value="ml-IN">മലയാളം (Malayalam)</option>
+      </select>
+    </div>
+
+    <div id="chat-box"></div>
+
+    <div class="input-row">
+      <input type="text" id="user-input" placeholder="Type your message...">
+      <button id="mic-btn">🎤</button>
+      <button id="send-btn">Send</button>
+    </div>
+  </div>
+
+  <script>
+    const chatBox = document.getElementById("chat-box");
+    const userInput = document.getElementById("user-input");
+    const sendBtn = document.getElementById("send-btn");
+    const micBtn = document.getElementById("mic-btn");
+    const langSelect = document.getElementById("lang");
+
+    let availableVoices = [];
+
+    // Step 1: Load all available voices as soon as the page loads
+    function loadVoices() {
+        availableVoices = window.speechSynthesis.getVoices();
+    }
+    
+    // Initial load
+    loadVoices();
+    // Update the list when voices change (this happens asynchronously)
+    window.speechSynthesis.onvoiceschanged = loadVoices;
+
+
+    // Add message to chat
+    function addMessage(text, sender) {
+        const msg = document.createElement("div");
+        msg.classList.add("msg", sender);
+        msg.textContent = text;
+        chatBox.appendChild(msg);
+        chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    // Text-to-Speech (Simplified and corrected version)
+    function speakText(text, langCode) {
+        // Stop any previous speech
+        window.speechSynthesis.cancel();
+
+        const speech = new SpeechSynthesisUtterance(text);
+        speech.lang = langCode;
+
+        // Find a specific voice from the pre-loaded list
+        const selectedVoice = availableVoices.find(voice => voice.lang === langCode);
+        if (selectedVoice) {
+            speech.voice = selectedVoice;
+        } else {
+            console.warn(`No voice found for language: ${langCode}. Using default.`);
+        }
+        
+        window.speechSynthesis.speak(speech);
+    }
+
+    // Send button click
+    sendBtn.addEventListener("click", () => {
+        const text = userInput.value.trim();
+        const langCode = langSelect.value;
+        if (text !== "") {
+            addMessage(text, "user");
+            userInput.value = "";
+            
+            // Bot replies after a short delay
+            setTimeout(() => {
+                let reply = "This is a sample response in English.";
+                if (langCode === "hi-IN") reply = "यह आपकी सहायता के लिए एक उदाहरण उत्तर है।";
+                if (langCode === "ml-IN") reply = "ഇത് നിങ്ങളുടെ സഹായത്തിനുള്ള ഒരു മാതൃകാ മറുപടിയാണ്.";
+                
+                // This will now work correctly
+                addMessage(reply, "bot"); 
+                speakText(reply, langCode);
+            }, 1000);
+        }
+    });
+
+    // Voice Recognition (No changes needed here)
+    let recognition;
+    if ("webkitSpeechRecognition" in window) {
+        recognition = new webkitSpeechRecognition();
+        recognition.continuous = false;
+        recognition.interimResults = false;
+
+        recognition.onstart = () => micBtn.classList.add("listening");
+        recognition.onend = () => micBtn.classList.remove("listening");
+        recognition.onresult = (event) => {
+            userInput.value = event.results[0][0].transcript;
+        };
+    } else {
+        alert("Speech Recognition not supported in this browser. Use Chrome.");
+    }
+
+    // Mic button click
+    micBtn.addEventListener("click", () => {
+        if (recognition) {
+            recognition.lang = langSelect.value;
+            recognition.start();
+        }
+    });
+</script>
+</body>
+</html>
+
+
+
+
+
+

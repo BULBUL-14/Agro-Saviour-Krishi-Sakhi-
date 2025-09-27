@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Krishi Sakhi</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <main class="centered-card">
+        <a href="index.html" class="brand">🌾 Krishi Sakhi</a>
+        <h2 style="margin-bottom: 20px;">Welcome Back!</h2>
+        <form id="loginForm" class="form">
+            <input id="login-email" type="email" required placeholder="Enter your email" />
+            <input id="login-password" type="password" required placeholder="Enter your password" />
+            <button class="btn btn-primary" type="submit" style="width: 100%;">Login</button>
+            <p style="margin-top: 15px;">New here? <a href="signup.html">Create an account</a></p>
+        </form>
+    </main>
+
+    <script src="app.js"></script>
+    <script>
+        // page-specific: handle login
+        document.getElementById('loginForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+            const email = document.getElementById('login-email').value.trim().toLowerCase();
+            const pass = document.getElementById('login-password').value;
+            const user = findUserByEmail(email);
+            if (!user) return alert('No account found. Please sign up.');
+            if (user.password !== pass) return alert('Invalid password.');
+            setCurrentUser(email);
+            window.location.href = 'index.html';
+        
+        });
+    </script>
+</body>
+</html>
+
+

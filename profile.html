@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile - Krishi Sakhi</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header class="main-header">
+        <div class="container">
+            <a href="index.html" class="logo">🌾 Krishi Sakhi</a>
+            <nav class="main-nav"><a href="index.html">Back to Dashboard</a></nav>
+        </div>
+    </header>
+
+    <main class="container" style="padding: 40px 20px; max-width: 700px;">
+        <h2>My Farm Profile</h2>
+        <p class="section-subtitle" style="text-align:left; margin: 0 0 30px 0;">Keep your farm details updated for the most accurate advice.</p>
+        
+        <form id="profileForm" class="form" style="gap: 20px;">
+            <div><label>Full Name</label><input id="pf-name" /></div>
+            <div><label>Email (cannot be changed)</label><input id="pf-email" readonly style="background:#eee; cursor: not-allowed;"/></div>
+            <div><label>Location (District, State)</label><input id="pf-location" /></div>
+            <div><label>Land Size</label><input id="pf-land" /></div>
+            <div><label>Soil Type</label>
+                <select id="pf-soil">
+                    <option value="">Select soil type</option>
+                    <option value="loamy">Loamy</option>
+                    <option value="sandy">Sandy</option>
+                    <option value="clay">Clay</option>
+                    <option value="silty">Silty</option>
+                </select>
+            </div>
+            <div><label>Main Crops (comma separated)</label><input id="pf-crops" /></div>
+            <div><label>Irrigation Method</label>
+                <select id="pf-irri">
+                    <option value="">Select irrigation method</option>
+                    <option>Rainfed</option>
+                    <option>Drip</option>
+                    <option>Sprinkler</option>
+                    <option>Flood / Traditional</option>
+                </select>
+            </div>
+            <button class="btn btn-primary" type="submit">Save Profile</button>
+        </form>
+    </main>
+    
+    <script src="app.js"></script>
+    <script>
+        ensureAuth();
+        const user = getCurrentUser();
+        // Populate form with existing data
+        document.getElementById('pf-name').value = user.name || '';
+        document.getElementById('pf-email').value = user.email || '';
+        document.getElementById('pf-location').value = user.location || '';
+        document.getElementById('pf-land').value = user.landSize || '';
+        document.getElementById('pf-soil').value = user.soilType || '';
+        document.getElementById('pf-crops').value = user.crops || '';
+        document.getElementById('pf-irri').value = user.irrigation || '';
+
+        // Handle form submission
+        document.getElementById('profileForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+            const upd = {
+                name: document.getElementById('pf-name').value.trim(),
+                location: document.getElementById('pf-location').value.trim(),
+                landSize: document.getElementById('pf-land').value.trim(),
+                soilType: document.getElementById('pf-soil').value,
+                crops: document.getElementById('pf-crops').value.trim(),
+                irrigation: document.getElementById('pf-irri').value
+            };
+            updateCurrentUserProfile(upd);
+            alert('Profile updated successfully!');
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Advisory - Krishi Sakhi</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="logo">🌾 Krishi Sakhi</div>
+    <nav>
+      <a href="dashboard.html">Home</a>
+      <a href="activity.html">Activity Log</a>
+      <a href="advisory.html">Advisory</a>
+      <a href="knowledge.html">Knowledge Hub</a>
+      <a href="profile.html">Profile</a>
+      <a id="logoutBtn" class="btn small">Logout</a>
+    </nav>
+  </header>
+
+  <main class="container">
+    <h2>Advisories & Alerts</h2>
+    <section id="alerts">
+      <!-- dynamic advisories -->
+      <p class="muted">Loading advisories...</p>
+    </section>
+
+    <section>
+      <h3>Ask Krishi Sakhi (simple rule-based)</h3>
+      <form id="qForm" class="form-inline">
+        <input id="qText" placeholder="e.g., What to spray for leaf spot?" />
+        <button class="btn" type="submit">Ask</button>
+      </form>
+      <div id="qAnswer" class="panel muted small"></div>
+    </section>
+  </main>
+
+  <footer><p>© 2025 Krishi Sakhi</p></footer>
+
+  <script src="app.js"></script>
+  <script>
+    ensureAuth();
+    const user = getCurrentUser();
+
+    // generate advisories combining weather + soil + activities
+    const weather = simulateWeather(user.location);
+    const advisories = [];
+
+    // weather-based advisory
+    if (weather.rainChance > 60) {
+      advisories.push({ title: 'Rain expected', text: `Rain ${weather.rainChance}% likely tomorrow. Delay pesticide/fertilizer applications.` });
+    } else {
+      advisories.push({ title: 'Low rain chance', text: 'No significant rain expected. Plan irrigation if soil is dry.' });
+    }
+
+    // pest check: if user logged pest in last 7 days, show alert
+    const recentPest = (user.activities || []).some(a => {
+      if (a.type === 'pest') {
+        const days = (new Date() - new Date(a.date)) / (1000*60*60*24);
+        return days <= 7;
+      }
+      return false;
+    });
+    if (recentPest) {
+      advisories.push({ title: 'Pest reported', text: 'Pest reported in your logs. Inspect closely and consider early IPM measures.'});
+    }
+
+    // soil-based suggestion
+    const soilNote = getSoilAdvisory(user.soilType, user.crops);
+    advisories.push({ title: 'Soil advisory', text: soilNote });
+
+    // render
+    const alerts = document.getElementById('alerts');
+    alerts.innerHTML = advisories.map(a => `
+      <div class="panel">
+        <strong>${a.title}</strong>
+        <p>${a.text}</p>
+      </div>
+    `).join('');
+
+    // simple Q&A (rule-based, demo)
+    document.getElementById('qForm').addEventListener('submit', function (e) {
+      e.preventDefault();
+      const q = document.getElementById('qText').value.toLowerCase();
+      const out = document.getElementById('qAnswer');
+      if (!q) return out.textContent = 'Please type your question.';
+
+      if (q.includes('soil') || q.includes('fertilizer')) {
+        out.textContent = getSoilAdvisory(user.soilType, user.crops);
+      } else if (q.includes('pest') || q.includes('disease') || q.includes('leaf')) {
+        out.textContent = 'Check affected leaves, remove heavily infected parts, use recommended IPM. For severe outbreaks, consult local agricultural officer.';
+      } else if (q.includes('rain') || q.includes('weather')) {
+        out.textContent = `Weather: ${weather.condition}, Rain chance ${weather.rainChance}%. ${weather.advice}`;
+      } else {
+        out.textContent = 'Sorry, I can help with soil, pests, irrigation, and weather suggestions for now.';
+      }
+    });
+
+    document.getElementById('logoutBtn').addEventListener('click', function () {
+      logout(); window.location.href = 'login.html';
+    });
+  </script>
+</body>
+</html>

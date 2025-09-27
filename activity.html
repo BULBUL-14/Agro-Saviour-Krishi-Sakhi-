@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Activity Log - Krishi Sakhi</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header class="main-header">
+        <div class="container">
+            <a href="index.html" class="logo">🌾 Krishi Sakhi</a>
+            <nav class="main-nav"><a href="index.html">Back to Dashboard</a></nav>
+        </div>
+    </header>
+
+    <main class="container" style="padding: 40px 20px; max-width: 800px;">
+        <h2>Activity Log</h2>
+        <p class="section-subtitle" style="text-align:left; margin: 0 0 30px 0;">Keep a record of all your farming activities here.</p>
+        
+        <form id="activityForm" style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap; background: var(--bg-light); padding: 20px; border-radius: 10px; margin-bottom: 30px;">
+            <select id="act-type" required style="flex: 1 1 150px; padding: 10px; border-radius: 8px; border: 1px solid var(--border-color);">
+                <option value="">-- Select activity --</option>
+                <option value="Sowing">Sowing</option>
+                <option value="Irrigation">Irrigation</option>
+                <option value="Fertilizer">Fertilizer</option>
+                <option value="Pest Control">Pest Control</option>
+                <option value="Harvest">Harvest</option>
+            </select>
+            <input type="date" id="act-date" required style="flex: 1 1 150px; padding: 10px; border-radius: 8px; border: 1px solid var(--border-color);"/>
+            <input id="act-note" placeholder="Add a note (e.g., fertilizer name)" style="flex: 2 1 250px; padding: 10px; border-radius: 8px; border: 1px solid var(--border-color);"/>
+            <button class="btn btn-primary" type="submit" style="padding: 10px 20px;">Add</button>
+        </form>
+
+        <section id="activityList">
+            </section>
+    </main>
+
+    <script src="app.js"></script>
+    <script>
+        ensureAuth();
+        let user = getCurrentUser();
+
+        function renderActivities() {
+            const list = user.activities || [];
+            const container = document.getElementById('activityList');
+            if (!list.length) {
+                container.innerHTML = '<p>No activities yet. Add one above.</p>';
+                return;
+            }
+            container.innerHTML = list.slice().reverse().map(a => `
+                <div style="display: flex; justify-content: space-between; padding: 15px; border-radius: 8px; background: var(--white); box-shadow: 0 2px 5px rgba(0,0,0,0.05); margin-bottom: 10px;">
+                    <div>
+                        <strong style="color: var(--primary-green);">${a.type}</strong>
+                        <div style="font-size: 0.9rem; color: #777;">${a.date}</div>
+                    </div>
+                    <div>${a.note || ''}</div>
+                </div>
+            `).join('');
+        }
+
+        document.getElementById('activityForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+            const type = document.getElementById('act-type').value;
+            const date = document.getElementById('act-date').value;
+            const note = document.getElementById('act-note').value.trim();
+            if (!type || !date) return alert('Please choose activity and date.');
+
+            const entry = { type, date, note };
+            addActivityToUser(entry);
+            user = getCurrentUser(); // Refresh user data
+            renderActivities();
+            document.getElementById('activityForm').reset();
+        });
+
+        renderActivities();
+    </script>
+</body>
+</html>

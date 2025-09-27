@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up - Krishi Sakhi</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <main class="centered-card">
+        <a href="index.html" class="brand">🌾 Krishi Sakhi</a>
+        <h2 style="margin-bottom: 20px;">Create Your Account</h2>
+        <form id="signupForm" class="form">
+            <input id="su-name" type="text" required placeholder="Your full name" />
+            <input id="su-email" type="email" required placeholder="Your email address" />
+            <input id="su-pass" type="password" required placeholder="Create a password" />
+            <input id="su-pass2" type="password" required placeholder="Confirm your password" />
+            
+            <hr style="margin: 10px 0;">
+            <p style="font-size: 0.9rem; color: #777;">Tell us about your farm (optional)</p>
+            
+            <input id="su-location" type="text" placeholder="Location (e.g., Palakkad, Kerala)" />
+            <select id="su-soil">
+                <option value="">Select soil type</option>
+                <option value="loamy">Loamy</option>
+                <option value="sandy">Sandy</option>
+                <option value="clay">Clay</option>
+                <option value="silty">Silty</option>
+            </select>
+            <input id="su-crops" type="text" placeholder="Main crops (e.g., rice, banana)" />
+
+            <button class="btn btn-primary" type="submit" style="width: 100%;">Sign Up</button>
+            <p style="margin-top: 15px;">Already have an account? <a href="login.html">Login</a></p>
+        </form>
+    </main>
+
+    <script src="app.js"></script>
+    <script>
+        document.getElementById('signupForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+            const name = document.getElementById('su-name').value.trim();
+            const email = document.getElementById('su-email').value.trim().toLowerCase();
+            const pass = document.getElementById('su-pass').value;
+            const pass2 = document.getElementById('su-pass2').value;
+
+            if (pass !== pass2) return alert('Passwords do not match.');
+            if (findUserByEmail(email)) return alert('An account with this email already exists.');
+
+            const user = {
+                name, email, password: pass,
+                location: document.getElementById('su-location').value.trim() || '',
+                soilType: document.getElementById('su-soil').value || '',
+                crops: document.getElementById('su-crops').value.trim() || '',
+                activities: []
+            };
+            saveUser(user);
+            alert('Account created successfully! Please log in.');
+            window.location.href = 'login.html';
+        });
+    </script>
+</body>
+</html>
+
+
+
